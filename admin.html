@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP Admin — Weniska & Kristen</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c8a97e;--deep:#0e0904;--text:#fff}
+body{font-family:'Jost',sans-serif;background:var(--deep);color:var(--text);min-height:100vh;padding:2rem 1rem}
+h1{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--gold);font-weight:300;text-align:center;margin-bottom:0.3rem}
+.sub{text-align:center;font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:2rem}
+.lock-screen{max-width:340px;margin:4rem auto;text-align:center}
+.lock-screen input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(200,169,126,0.3);border-radius:4px;padding:0.8rem 1rem;color:#fff;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;margin-bottom:1rem;text-align:center;letter-spacing:0.2em}
+.lock-btn{background:var(--gold);color:#0e0904;border:none;padding:0.8rem 2.5rem;font-family:'Jost',sans-serif;font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;cursor:pointer;border-radius:4px}
+.lock-btn:hover{opacity:0.85}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;max-width:700px;margin:0 auto 2rem}
+.stat-card{background:rgba(255,255,255,0.04);border:1px solid rgba(200,169,126,0.2);border-radius:6px;padding:1.2rem;text-align:center}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--gold);font-weight:300}
+.stat-label{font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem}
+table{width:100%;max-width:900px;margin:0 auto;border-collapse:collapse;font-size:0.8rem}
+th{background:rgba(200,169,126,0.15);color:var(--gold);font-weight:400;letter-spacing:0.15em;text-transform:uppercase;font-size:0.65rem;padding:0.8rem 0.6rem;text-align:left}
+td{padding:0.7rem 0.6rem;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.75);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.badge{display:inline-block;padding:0.2rem 0.6rem;border-radius:50px;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase}
+.badge-yes{background:rgba(100,200,100,0.15);color:#8edc8e}
+.badge-no{background:rgba(200,80,80,0.15);color:#e88e8e}
+.empty{text-align:center;color:rgba(255,255,255,0.25);padding:3rem;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:1.2rem}
+.export-btn{display:block;margin:2rem auto 0;background:none;border:1px solid rgba(200,169,126,0.4);color:var(--gold);padding:0.6rem 1.8rem;font-family:'Jost',sans-serif;font-size:0.68rem;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;border-radius:50px}
+.export-btn:hover{background:rgba(200,169,126,0.1)}
+#admin-panel{display:none}
+
+#guest-form input,
+#admin-login-form input {
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(200,169,126,0.3);
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+  color: #fff;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+#guest-form-message[data-type="success"] { color: #8edc8e; }
+#guest-form-message[data-type="error"] { color: #e88e8e; }
+#guest-form-message[data-type="warning"] { color: #f1cf7a; }
+#guest-form-message[data-type="info"] { color: rgba(255,255,255,0.75); }
+
+#guest-table,
+#rsvp-table {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+#guest-table button,
+#rsvp-table button {
+  margin: 0.15rem;
+}
+
+</style>
+</head>
+<body>
+
+<div id="login-panel" class="lock-screen">
+  <h1>Admin Access</h1>
+  <p class="sub">Weniska &amp; Kristen, RSVP Tracker</p>
+
+  <form id="admin-login-form">
+    <input
+      type="email"
+      id="admin-email"
+      placeholder="Admin Email"
+      autocomplete="username"
+      required
+    />
+    <input
+      type="password"
+      id="admin-password"
+      placeholder="Password"
+      autocomplete="current-password"
+      required
+    />
+    <button type="submit" class="lock-btn">Enter</button>
+  </form>
+
+  <p
+    id="login-error"
+    style="color:#e88e8e;font-size:0.75rem;margin-top:0.8rem;display:none"
+  ></p>
+</div>
+
+<div id="admin-panel" style="display:none;">
+  <h1>RSVP Dashboard</h1>
+  <p class="sub">Weniska &amp; Kristen, August 1, 2026</p>
+
+  <div style="max-width:1100px;margin:0 auto 1.5rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+    <button class="export-btn" id="refresh-btn" type="button">Refresh</button>
+    <button class="export-btn" id="export-btn" type="button">Export RSVPs CSV</button>
+    <button class="export-btn" id="export-guests-btn" type="button">Export Guests CSV</button>
+    <button class="export-btn" id="logout-btn" type="button">Logout</button>
+  </div>
+
+  <div class="stats" id="stats-row"></div>
+
+  <section id="guest-admin-section" style="max-width:1100px;margin:0 auto 2rem;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);font-weight:300;margin-bottom:1rem;text-align:center;">
+      Guest List
+    </h2>
+
+    <form
+      id="guest-form"
+      style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.75rem;max-width:1100px;margin:0 auto 1rem;"
+    >
+      <input type="hidden" id="guest-id" />
+
+      <input type="text" id="guest-name" placeholder="Full name" required />
+      <input type="text" id="guest-phone" placeholder="Phone" />
+      <input
+        type="text"
+        id="guest-group"
+        placeholder="Invite group"
+        list="guest-group-options"
+        required
+      />
+      <datalist id="guest-group-options"></datalist>
+
+      <input type="number" id="guest-max-party" min="1" value="1" required />
+      <input type="text" id="guest-notes" placeholder="Notes" />
+
+      <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:rgba(255,255,255,0.75);">
+        <input type="checkbox" id="guest-active" checked />
+        Active
+      </label>
+
+      <button type="button" class="export-btn" id="guest-group-generate">Generate Group</button>
+      <button type="submit" class="export-btn">Save Guest</button>
+      <button type="button" class="export-btn" id="guest-form-reset">Clear</button>
+    </form>
+
+    <p id="guest-form-message" style="max-width:1100px;margin:0 auto 1rem;font-size:0.85rem;"></p>
+
+    <table id="guest-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Invite Group</th>
+          <th>Max Party</th>
+          <th>Status</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="guest-tbody"></tbody>
+    </table>
+  </section>
+
+  <section style="max-width:1100px;margin:0 auto 2rem;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);font-weight:300;margin-bottom:1rem;text-align:center;">
+      RSVP Responses
+    </h2>
+
+    <table id="rsvp-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Group</th>
+          <th>Status</th>
+          <th>Party</th>
+          <th>Additional Guests</th>
+          <th>Dietary</th>
+          <th>Song Request</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody id="rsvp-tbody"></tbody>
+    </table>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/guests-admin.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>
