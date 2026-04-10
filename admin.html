@@ -29,6 +29,12 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .empty{text-align:center;color:rgba(255,255,255,0.25);padding:3rem;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:1.2rem}
 .export-btn{display:block;margin:2rem auto 0;background:none;border:1px solid rgba(200,169,126,0.4);color:var(--gold);padding:0.6rem 1.8rem;font-family:'Jost',sans-serif;font-size:0.68rem;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;border-radius:50px}
 .export-btn:hover{background:rgba(200,169,126,0.1)}
+.import-zone{max-width:1100px;margin:0 auto 1.5rem;padding:1.2rem;border:1px dashed rgba(200,169,126,0.3);border-radius:6px;background:rgba(255,255,255,0.02)}
+.import-zone label{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.45);display:block;margin-bottom:0.5rem}
+.import-zone input[type="file"]{color:rgba(255,255,255,0.7);font-family:'Jost',sans-serif;font-size:0.8rem;margin-bottom:0.75rem}
+.import-zone input[type="file"]::file-selector-button{background:rgba(200,169,126,0.15);border:1px solid rgba(200,169,126,0.4);color:var(--gold);padding:0.35rem 0.9rem;border-radius:4px;font-family:'Jost',sans-serif;font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;margin-right:0.75rem}
+#guest-import-preview th{background:rgba(200,169,126,0.1);color:var(--gold);font-weight:400;letter-spacing:0.1em;text-transform:uppercase;font-size:0.6rem;padding:0.5rem 0.5rem;text-align:left}
+#guest-import-preview td{padding:0.5rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.7);vertical-align:top;font-size:0.75rem}
 #admin-panel{display:none}
 
 #guest-form input,
@@ -112,6 +118,27 @@ tr:hover td{background:rgba(255,255,255,0.02)}
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);font-weight:300;margin-bottom:1rem;text-align:center;">
       Guest List
     </h2>
+
+    <!-- CSV Import -->
+    <div class="import-zone">
+      <label>Batch Import from CSV</label>
+      <input type="file" id="guest-import-file" accept=".csv,text/csv" />
+      <div id="guest-import-preview"></div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.25rem;">
+        <button type="button" class="export-btn" id="guest-import-btn" style="margin:0;">Import Valid Rows</button>
+        <a
+          id="csv-template-link"
+          download="guests-template.csv"
+          href="data:text/csv;charset=utf-8,full_name%2Cphone%2Cinvite_group%2Cmax_party_size%2Cnotes%2Cis_active%0AJane%20Smith%2C%2B12423001234%2Cgrp-jane-smith%2C2%2C%2Cyes%0AJohn%20Doe%2C%2B12425556789%2Cgrp-john-doe%2C1%2CSeat%20near%20front%2Cyes"
+          class="export-btn"
+          style="margin:0;display:inline-flex;align-items:center;text-decoration:none;"
+        >Download Template</a>
+      </div>
+      <p style="font-size:0.68rem;color:rgba(255,255,255,0.3);margin-top:0.75rem;letter-spacing:0.05em;">
+        Required columns: <strong style="color:rgba(255,255,255,0.5);">full_name</strong>, <strong style="color:rgba(255,255,255,0.5);">invite_group</strong> &nbsp;|&nbsp;
+        Optional: phone, max_party_size (default 1), notes, is_active (yes/no, default yes)
+      </p>
+    </div>
 
     <form
       id="guest-form"
